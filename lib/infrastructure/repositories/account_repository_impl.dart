@@ -23,10 +23,19 @@ class AccountRepositoryImpl extends BaseRepository
     String userName,
     String password,
   ) async {
+    final doLoginResult = await remoteDataSource.loginAccount(userName,password)
+    final result = handleResponse<Response<Token>>(doLoginResult)
+    switch result {
+      case .success:
+      
+      case .failure:
+    }
+
     if (await networkInfo.isConnected) {
       try {
         final result = await remoteDataSource.loginAccount(userName, password);
-
+        final response = handleResponse<Token,Error>(result)
+      final new  = token
         if (result != null) {
           await localDataSource.saveToken(result);
           // return const Right(true);
