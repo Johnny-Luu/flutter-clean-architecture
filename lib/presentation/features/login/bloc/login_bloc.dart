@@ -1,4 +1,5 @@
 import 'package:fimber/fimber.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/application/repositories/account_repository.dart';
 import 'package:flutter_clean_architecture/domain/bloc/base_bloc.dart';
@@ -23,10 +24,10 @@ class LoginBloc extends BaseBloc {
     } else if (event is LoginSubmitted) {
       await safeDataCall(
         emit,
-        callToHost: _accountRepository.loginAccount("0987654321", "123456"),
+        callToHost: _accountRepository.loginAccount(userName, password),
         success: (Emitter<BaseState> emit, bool? data) {
           Fimber.e("login success data - $data");
-          hideDialogState();
+          hideDialogState(emit);
           if (data == true) {
             // navigationService.pushAndRemoveUntil(
             //   const HomeScreenRoute(),
@@ -34,6 +35,11 @@ class LoginBloc extends BaseBloc {
             // );
             emit(const SuccessState(true));
           }
+        },
+        error: (Emitter<BaseState> emit, String message) {
+          debugPrint('Login failed');
+          hideDialogState(emit);
+          emit(ErrorDialogState(message: 'Login failed!'));
         },
       );
     }
