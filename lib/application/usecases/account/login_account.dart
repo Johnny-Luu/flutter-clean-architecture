@@ -9,7 +9,7 @@ class LoginAccountUseCase implements UseCase<bool, ParamLogin> {
   LoginAccountUseCase(this.repository);
 
   @override
-  Future<Result<bool>?> call(ParamLogin params) async {
+  Future<Result<bool>> call(ParamLogin params) async {
     return await repository.loginAccount(params.userName, params.password);
   }
 }
