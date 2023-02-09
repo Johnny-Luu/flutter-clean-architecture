@@ -77,3 +77,11 @@ class ErrorDialogState extends DialogState {
   @override
   bool get stringify => true;
 }
+
+class DismissDialogState extends DialogState {
+  @override
+  List<Object?> get props => [];
+
+  @override
+  bool get stringify => true;
+}

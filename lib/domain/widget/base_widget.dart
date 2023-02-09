@@ -46,6 +46,9 @@ abstract class BaseView<B extends BaseBloc> extends StatelessWidget {
             ),
           );
         }
+        if (state is DismissDialogState) {
+          Navigator.of(context).pop();
+        }
       }, buildWhen: (BaseState previous, BaseState current) {
         // return true/false to determine whether or not
         // to rebuild the widget with state
@@ -69,7 +72,7 @@ abstract class BaseView<B extends BaseBloc> extends StatelessWidget {
 
   showDialogView({required BuildContext context, required Widget content}) {
     showDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(content: content);
