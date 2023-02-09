@@ -31,60 +31,23 @@ class AccountRepositoryImpl extends BaseRepository
       case .failure:
     }
 
-    // if (await networkInfo.isConnected) {
-    //   try {
-    //     final result = await remoteDataSource.loginAccount(userName, password);
-    //     final response = handleResponse<Token,Error>(result)
-    //   final new  = token
-    //     if (result != null) {
-    //       await localDataSource.saveToken(result);
-    //       // return const Right(true);
-    //       return Success(true);
-    //     }
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.loginAccount(userName, password);
+        final response = handleResponse<Token,Error>(result)
+      final new  = token
+        if (result != null) {
+          await localDataSource.saveToken(result);
+          // return const Right(true);
+          return Success(true);
+        }
 
-    //     return Error(ErrorType.GENERIC, '');
-    //   } on Exception {
-    //     return Error(ErrorType.GENERIC, '');
-    //   }
-    // } else {
-    //   return Error(ErrorType.GENERIC, '');
-    // }
-  }
-}
-
-Future<Response<T>> handleResponse<T>(http.Response response) {
-  if (response.statusCode == 200) {
-    final T data = json.decode(response.body);
-    return Future.value(Response.success(data));
-  } else {
-    return Future.value(Response.failure('Failed to load data'));
-  }
-}
-
-class Response<T> {
-  final T data;
-  final bool success;
-  final String message;
-
-  Response({
-    this.data,
-    this.success,
-    this.message,
-  });
-
-  factory Response.success(T data) {
-    return Response(
-      data: data,
-      success: true,
-      message: null,
-    );
-  }
-
-  factory Response.failure(String message) {
-    return Response(
-      data: null,
-      success: false,
-      message: message,
-    );
+        return Error(ErrorType.GENERIC, '');
+      } on Exception {
+        return Error(ErrorType.GENERIC, '');
+      }
+    } else {
+      return Error(ErrorType.GENERIC, '');
+    }
   }
 }
