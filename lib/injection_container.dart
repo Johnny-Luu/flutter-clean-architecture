@@ -41,5 +41,5 @@ Future<void> init() async {
   // sl.registerLazySingleton(() => http.Client());
 
   // Presentation
-  sl.registerFactory(() => LoginBloc(sl()));
+  sl.registerFactory(() => LoginBloc(loginAccountUseCase: sl()));
 }

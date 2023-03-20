@@ -41,47 +41,53 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
 
     if (callToDb != null) {
       Fimber.d("start call db");
-      (await callToDb).when(success: (data) async {
-        if (callToHost == null && success == null) {
-          hideDialogState(emit);
-        }
-        success != null ? success.call(emit, data) : emit(SuccessState(data));
-      }, error: (type, message) async {
-        if (callToHost == null) {
-          if (error == null) {
+      (await callToDb).when(
+        success: (data) async {
+          if (callToHost == null && success == null) {
             hideDialogState(emit);
-            emit(ErrorDialogState(message: message));
-          } else {
-            error.call(emit, message);
           }
-        }
-      });
+          success != null ? success.call(emit, data) : emit(SuccessState(data));
+        },
+        error: (type, message) async {
+          if (callToHost == null) {
+            if (error == null) {
+              hideDialogState(emit);
+              emit(ErrorDialogState(message: message));
+            } else {
+              error.call(emit, message);
+            }
+          }
+        },
+      );
     }
 
     // call data from host.
     if (callToHost != null) {
       Fimber.d("start call host");
-      (await callToHost).when(success: (data) async {
-        if (success == null) {
-          hideDialogState(emit);
-          emit(SuccessState(data));
-        } else {
-          success.call(emit, data);
-        }
-      }, error: (type, message) async {
-        if (error == null) {
-          hideDialogState(emit);
-        }
-        if (type == ErrorType.TOKEN_EXPIRED) {
-          error != null
-              ? error.call(emit, message)
-              : emit(ErrorDialogState(message: message));
-        } else {
-          error != null
-              ? error.call(emit, message)
-              : emit(ErrorDialogState(message: message));
-        }
-      });
+      (await callToHost).when(
+        success: (data) async {
+          if (success == null) {
+            hideDialogState(emit);
+            emit(SuccessState(data));
+          } else {
+            success.call(emit, data);
+          }
+        },
+        error: (type, message) async {
+          if (error == null) {
+            hideDialogState(emit);
+          }
+          if (type == ErrorType.TOKEN_EXPIRED) {
+            error != null
+                ? error.call(emit, message)
+                : emit(ErrorDialogState(message: message));
+          } else {
+            error != null
+                ? error.call(emit, message)
+                : emit(ErrorDialogState(message: message));
+          }
+        },
+      );
     }
   }
 

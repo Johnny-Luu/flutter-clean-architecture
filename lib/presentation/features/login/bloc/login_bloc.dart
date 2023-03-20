@@ -1,7 +1,7 @@
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_clean_architecture/application/repositories/account_repository.dart';
+import 'package:flutter_clean_architecture/application/usecases/account/login_account.dart';
 import 'package:flutter_clean_architecture/domain/bloc/base_bloc.dart';
 import 'package:flutter_clean_architecture/domain/bloc/event.dart';
 import 'package:flutter_clean_architecture/domain/bloc/state.dart';
@@ -9,11 +9,12 @@ import 'package:flutter_clean_architecture/domain/bloc/state.dart';
 import 'login_event.dart';
 
 class LoginBloc extends BaseBloc {
-  final AccountRepository _accountRepository;
+  final LoginAccountUseCase loginAccountUseCase;
+
+  LoginBloc({required this.loginAccountUseCase}) : super(const InitialState());
+
   String userName = "";
   String password = "";
-
-  LoginBloc(this._accountRepository) : super(const InitialState());
 
   @override
   Future<void> handleEvent(BaseEvent event, Emitter<BaseState> emit) async {
@@ -24,7 +25,12 @@ class LoginBloc extends BaseBloc {
     } else if (event is LoginSubmitted) {
       await safeDataCall(
         emit,
-        callToHost: _accountRepository.loginAccount(userName, password),
+        callToHost: loginAccountUseCase.call(
+          ParamLogin(
+            userName: userName,
+            password: password,
+          ),
+        ),
         success: (Emitter<BaseState> emit, bool? data) {
           Fimber.e("login success data - $data");
           hideDialogState(emit);
