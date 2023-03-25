@@ -16,7 +16,8 @@ class ModelBaseResponse<T> {
   final String? message;
   final T? data;
 
-  ModelBaseResponse(this.requestId, this.status, this.desc, this.message, this.data);
+  ModelBaseResponse(
+      this.requestId, this.status, this.desc, this.message, this.data);
 
   bool isSuccess() => successStatus == status;
 
@@ -25,7 +26,7 @@ class ModelBaseResponse<T> {
   bool isTokenExprired() => tokenExprired == status;
 
   factory ModelBaseResponse.fromJson(
-      Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
       _$ModelBaseResponseFromJson<T>(json, fromJsonT);
 
   Map<String, dynamic> toJson(Object Function(T) toJsonT) =>
